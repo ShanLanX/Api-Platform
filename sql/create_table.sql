@@ -7,7 +7,7 @@ create database if not exists api_data;
 
 -- 切换库
 use api_data;
-drop table api_data.user
+drop table api_data.user;
 -- 用户表
 create table if not exists user
 (
@@ -17,6 +17,7 @@ create table if not exists user
     unionId      varchar(256)                           null comment '微信开放平台id',
     mpOpenId     varchar(256)                           null comment '公众号openId',
     userName     varchar(256)                           null comment '用户昵称',
+    requestParam text null comment '请求参数',
     userAvatar   varchar(1024)                          null comment '用户头像',
     userProfile  varchar(512)                           null comment '用户简介',
     userRole     varchar(256) default 'user'            not null comment '用户角色：user/admin/ban',
@@ -67,3 +68,16 @@ create table if not exists post_favour
     index idx_postId (postId),
     index idx_userId (userId)
 ) comment '帖子收藏';
+#  关系表 表示用户
+create table if not exists api_data.`user_interface_info`
+(
+    `id` bigint not null auto_increment comment '主键' primary key,
+    `userId` bigint not null comment '调用用户 id',
+    `interfaceInfoId` bigint not null comment '接口 id',
+    `totalNum` int default 0 not null comment '总调用次数',
+    `leftNum` int default 0 not null comment '剩余调用次数',
+    `status` int default 0 not null comment '0-正常，1-禁用',
+    `createTime` datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    `updateTime` datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    `isDelete` tinyint default 0 not null comment '是否删除(0-未删, 1-已删)'
+) comment '用户调用接口关系';

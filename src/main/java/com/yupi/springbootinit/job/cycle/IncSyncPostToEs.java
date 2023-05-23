@@ -3,11 +3,13 @@ package com.yupi.springbootinit.job.cycle;
 import com.yupi.springbootinit.esdao.PostEsDao;
 import com.yupi.springbootinit.mapper.PostMapper;
 import com.yupi.springbootinit.model.dto.post.PostEsDTO;
-import com.yupi.springbootinit.model.entity.Post;
+
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
+
+import com.yupi.springbootinit.model.entity.Post;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.scheduling.annotation.Scheduled;

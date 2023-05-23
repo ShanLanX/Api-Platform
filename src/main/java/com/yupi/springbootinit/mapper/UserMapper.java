@@ -1,7 +1,7 @@
 package com.yupi.springbootinit.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.yupi.springbootinit.model.entity.User;
+import com.swx.apicommon.model.entity.User;
 
 /**
  * 用户数据库操作
@@ -12,6 +12,7 @@ import com.yupi.springbootinit.model.entity.User;
 public interface UserMapper extends BaseMapper<User> {
 
 }
+
 
 
 

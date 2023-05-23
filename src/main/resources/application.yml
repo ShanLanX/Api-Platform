@@ -94,3 +94,16 @@ cos:
     secretKey: xxx
     region: xxx
     bucket: xxx
+api:
+  client:
+    access-key: swx
+    secret-key: 123456789
+dubbo:
+  application:
+    name: dubbo-springboot-demo-provider
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    id: nacos-registry
+    address: nacos://localhost:8848

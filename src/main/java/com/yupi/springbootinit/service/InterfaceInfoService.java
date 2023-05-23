@@ -1,7 +1,7 @@
 package com.yupi.springbootinit.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yupi.springbootinit.model.entity.InterfaceInfo;
+import com.swx.apicommon.model.entity.InterfaceInfo;
 
 /**
 * @author SunWeixiang
@@ -10,5 +10,5 @@ import com.yupi.springbootinit.model.entity.InterfaceInfo;
 */
 public interface InterfaceInfoService extends IService<InterfaceInfo> {
 
-    void validInterfaceInfo(InterfaceInfo interfaceinfo, boolean b);
+    void validInterfaceInfo(InterfaceInfo interfaceinfo, boolean add);
 }
