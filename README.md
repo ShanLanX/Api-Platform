@@ -20,7 +20,8 @@
 6. API接入
 
 ## 业务流程
-![业务流程](https://i.ibb.co/K043qxX/image.jpg)
+
+<img alt="业务流程" src="https://i.ibb.co/K043qxX/image.jpg" width="800" height="500"/>
 
 
 

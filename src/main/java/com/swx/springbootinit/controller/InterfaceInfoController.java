@@ -7,7 +7,9 @@ import com.example.apiclientsdk.client.ApiClient;
 import com.google.gson.Gson;
 import com.swx.apicommon.model.entity.InterfaceInfo;
 import com.swx.apicommon.model.entity.User;
+import com.swx.apicommon.model.entity.UserInterfaceInfo;
 import com.swx.springbootinit.annotation.AuthCheck;
+import com.swx.springbootinit.annotation.ShanLan;
 import com.swx.springbootinit.common.*;
 import com.swx.springbootinit.constant.CommonConstant;
 import com.swx.springbootinit.constant.UserConstant;
@@ -15,22 +17,27 @@ import com.swx.springbootinit.exception.BusinessException;
 import com.swx.springbootinit.exception.ThrowUtils;
 import com.swx.springbootinit.model.dto.interfaceinfo.InterfaceInfoInvokeRequest;
 import com.swx.springbootinit.service.InterfaceInfoService;
+import com.swx.springbootinit.service.UserInterfaceInfoService;
 import com.swx.springbootinit.service.UserService;
 import com.swx.springbootinit.common.*;
 import com.swx.springbootinit.model.dto.interfaceinfo.InterfaceInfoAddRequest;
 import com.swx.springbootinit.model.dto.interfaceinfo.InterfaceInfoQueryRequest;
 import com.swx.springbootinit.model.dto.interfaceinfo.InterfaceInfoUpdateRequest;
 import com.swx.springbootinit.model.enums.InterfaceInfoStatusEnum;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 
 @RestController
-@RequestMapping("/interfaceinfo")
+@RequestMapping("/interfaceInfo")
 @Slf4j
 public class InterfaceInfoController {
 
@@ -41,7 +48,13 @@ public class InterfaceInfoController {
     private UserService userService;
 
     @Resource
+    private UserInterfaceInfoService userInterfaceInfoService;
+
+    @Resource
     private ApiClient apiClient;
+
+    @Resource
+    private RedisTemplate redisTemplate;
 
     private final static Gson GSON = new Gson();
 
@@ -214,8 +227,8 @@ public class InterfaceInfoController {
         boolean result = interfaceInfoService.updateById(interfaceInfo);
         return ResultUtils.success(result);
     }
-    @PostMapping("/invoke")
 
+    @PostMapping("/invoke")
     public BaseResponse<Object> invokeInterfaceInfo(@RequestBody InterfaceInfoInvokeRequest invokeRequest , HttpServletRequest request) {
         if (invokeRequest == null || invokeRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -229,18 +242,63 @@ public class InterfaceInfoController {
         }
         // 判断接口状态
         if(oldInterfaceInfo.getStatus()==InterfaceInfoStatusEnum.OFFLINE.getValue()){
-            throw new BusinessException(ErrorCode.PARAMS_ERROR,"接口已关闭");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,"接口已关闭！");
 
         }
         String userRequestParams=invokeRequest.getUserRequestParams();
         User loginUser=userService.getLoginUser(request);
+        QueryWrapper<UserInterfaceInfo> userInterfaceInfoQueryWrapper=new QueryWrapper<>();
+        userInterfaceInfoQueryWrapper.eq("userId",loginUser.getId());
+        userInterfaceInfoQueryWrapper.eq("interfaceInfoId",id);
+        UserInterfaceInfo userInterfaceInfo=userInterfaceInfoService.getOne(userInterfaceInfoQueryWrapper);
+        if(userInterfaceInfo==null||userInterfaceInfo.getLeftNum()<=0){
+            throw new BusinessException(ErrorCode.OPERATION_ERROR,"调用次数不足！");
+
+        }
         String accessKey=loginUser.getAccessKey();
         String secretKey=loginUser.getSecretKey();
-        ApiClient tempClient=new ApiClient(accessKey,secretKey);
-        Gson gson=new Gson();
-        com.example.apiclientsdk.model.User user=gson.fromJson(userRequestParams, com.example.apiclientsdk.model.User.class);
-        String userNameByPost=tempClient.getUserNameByPost(user);
-        return ResultUtils.success(userNameByPost);
+        Object res=invokeInterfaceInfo(ApiClient.class,oldInterfaceInfo.getMethodName(),userRequestParams,accessKey,secretKey);
+        if(res==null){
+            throw  new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        if(res.toString().contains("Error request"))
+        {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR,"调用错误，请检查调用次数");
+        }
+
+//        Gson gson=new Gson();
+//        com.example.apiclientsdk.model.User user=gson.fromJson(userRequestParams, com.example.apiclientsdk.model.User.class);
+//        String userNameByPost=tempClient.getUserNameByPost(user);
+        return ResultUtils.success(res);
+    }
+    private Object invokeInterfaceInfo(Class<?> clazz,String methodName,String userRequestParams,String accessKey,String secretKey){
+        try{
+            Constructor<?> clientConstructor =clazz.getConstructor(String.class,String.class);
+            ApiClient apiClient= (ApiClient) clientConstructor.newInstance(accessKey,secretKey);
+            Method[] methods=clazz.getMethods();
+            for(Method m:methods){
+                if(m.getName().equals(methodName)){
+                    Class<?>[] paramTypes=m.getParameterTypes();
+                    if(paramTypes.length==0){
+                        // 无参方法直接调用
+                        return m.invoke(apiClient);
+                    }
+                    Gson gson=new Gson();
+                    Object parameter=gson.fromJson(userRequestParams,paramTypes[0]);
+                    return m.invoke(apiClient,parameter);
+
+                }
+            }
+
+
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            throw  new BusinessException(ErrorCode.SYSTEM_ERROR,"调用方法出错");
+
+        }
+        return null;
     }
 
 }

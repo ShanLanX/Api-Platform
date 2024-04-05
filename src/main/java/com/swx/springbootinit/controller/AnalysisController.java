@@ -41,6 +41,7 @@ public class AnalysisController {
         QueryWrapper<InterfaceInfo> queryWrapper = new QueryWrapper<>();
         queryWrapper.in("id", interfaceInfoIdObjMap.keySet());
         List<InterfaceInfo> interfaceInfos=interfaceInfoService.list(queryWrapper);
+
         if(CollectionUtils.isEmpty(interfaceInfos)){
             throw  new BusinessException(ErrorCode.SYSTEM_ERROR);
         }

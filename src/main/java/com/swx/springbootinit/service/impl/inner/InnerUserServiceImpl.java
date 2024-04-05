@@ -1,5 +1,6 @@
 package com.swx.springbootinit.service.impl.inner;
 
+import com.alibaba.nacos.shaded.io.grpc.stub.annotations.RpcMethod;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.swx.apicommon.model.entity.User;
 import com.swx.apicommon.service.InnerUserService;
@@ -12,6 +13,7 @@ import org.apache.dubbo.config.annotation.DubboService;
 import javax.annotation.Resource;
 
 @DubboService
+//@RpcService(interfaceType = InnerUserService.class)
 public class InnerUserServiceImpl implements InnerUserService {
     @Resource
     UserMapper userMapper;

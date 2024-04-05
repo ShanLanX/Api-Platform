@@ -10,25 +10,28 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.swx</groupId>
-    <artifactId>springboot-init</artifactId>
+    <artifactId>API-Backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Api-Backend</name>
+    <name>API-Backend</name>
     <properties>
         <java.version>1.8</java.version>
 
     </properties>
     <dependencies>
+
+
+
         <!--引入自己的服务-->
         <dependency>
             <groupId>com.swx</groupId>
             <artifactId>API-Common</artifactId>
             <version>0.0.1</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.dubbo</groupId>
-            <artifactId>dubbo-samples-spring-boot-interface</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.dubbo</groupId>-->
+<!--            <artifactId>dubbo-samples-spring-boot-interface</artifactId>-->
+<!--            <version>1.0-SNAPSHOT</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.apache.dubbo</groupId>
@@ -73,12 +76,16 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
+            <version>2.5.1</version>
+      </dependency>
         <dependency>
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-data-redis</artifactId>
         </dependency>
-        <!-- elasticsearch-->
+
+
+
+        <!--         elasticsearch-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
@@ -88,6 +95,12 @@
             <groupId>com.github.binarywang</groupId>
             <artifactId>wx-java-mp-spring-boot-starter</artifactId>
             <version>4.4.0</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>guava</artifactId>
+                    <groupId>com.google.guava</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- https://doc.xiaominfo.com/knife4j/documentation/get_start.html-->
         <dependency>

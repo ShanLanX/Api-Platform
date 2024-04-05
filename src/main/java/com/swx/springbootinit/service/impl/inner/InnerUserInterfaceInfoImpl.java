@@ -1,10 +1,12 @@
 package com.swx.springbootinit.service.impl.inner;
 
+import com.swx.apicommon.service.BlackListService;
 import com.swx.apicommon.service.InnerUserInterfaceInfoService;
 import com.swx.springbootinit.service.UserInterfaceInfoService;
 import org.apache.dubbo.config.annotation.DubboService;
 
 import javax.annotation.Resource;
+//@RpcService(interfaceType = InnerUserInterfaceInfoService.class)
 @DubboService
 public class InnerUserInterfaceInfoImpl implements InnerUserInterfaceInfoService {
     @Resource

@@ -15,7 +15,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @Profile({"dev", "test"})
 public class Knife4jConfig {
-
     @Bean
     public Docket defaultApi2() {
         return new Docket(DocumentationType.OAS_30)

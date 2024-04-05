@@ -5,25 +5,150 @@
 <mapper namespace="com.swx.springbootinit.mapper.InterfaceInfoMapper">
 
     <resultMap id="BaseResultMap" type="com.swx.apicommon.model.entity.InterfaceInfo">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="description" column="description" jdbcType="VARCHAR"/>
-            <result property="url" column="url" jdbcType="VARCHAR"/>
-            <result property="requestHeader" column="requestHeader" jdbcType="VARCHAR"/>
-            <result property="responseHeader" column="responseHeader" jdbcType="VARCHAR"/>
-            <result property="requestParams" column="requestParams" jdbcType="VARCHAR"/>
-            <result property="status" column="status" jdbcType="INTEGER"/>
-            <result property="method" column="method" jdbcType="VARCHAR"/>
-            <result property="userId" column="userId" jdbcType="BIGINT"/>
-            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
-            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="url" column="url" jdbcType="VARCHAR"/>
+        <result property="requestHeader" column="requestHeader" jdbcType="VARCHAR"/>
+        <result property="responseHeader" column="responseHeader" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="method" column="method" jdbcType="VARCHAR"/>
+        <result property="userId" column="userId" jdbcType="BIGINT"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+        <result property="requestParams" column="requestParams" jdbcType="VARCHAR"/>
+        <result property="methodName" column="methodName" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,name,description,
-        url,requestHeader,responseHeader,requestParams
+        url,requestHeader,responseHeader,
         status,method,userId,
-        createTime,updateTime,isDelete
+        createTime,updateTime,isDelete,
+        requestParams,methodName
     </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from interface_info
+        where  id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from interface_info
+        where  id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.swx.apicommon.model.entity.InterfaceInfo" useGeneratedKeys="true">
+        insert into interface_info
+        ( id,name,description
+        ,url,requestHeader,responseHeader
+        ,status,method,userId
+        ,createTime,updateTime,isDelete
+        ,requestParams,methodName)
+        values (#{id,jdbcType=BIGINT},#{name,jdbcType=VARCHAR},#{description,jdbcType=VARCHAR}
+               ,#{url,jdbcType=VARCHAR},#{requestHeader,jdbcType=VARCHAR},#{responseHeader,jdbcType=VARCHAR}
+               ,#{status,jdbcType=INTEGER},#{method,jdbcType=VARCHAR},#{userId,jdbcType=BIGINT}
+               ,#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP},#{isDelete,jdbcType=TINYINT}
+               ,#{requestParams,jdbcType=VARCHAR},#{methodName,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.swx.apicommon.model.entity.InterfaceInfo" useGeneratedKeys="true">
+        insert into interface_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="description != null">description,</if>
+            <if test="url != null">url,</if>
+            <if test="requestHeader != null">requestHeader,</if>
+            <if test="responseHeader != null">responseHeader,</if>
+            <if test="status != null">status,</if>
+            <if test="method != null">method,</if>
+            <if test="userId != null">userId,</if>
+            <if test="createTime != null">createTime,</if>
+            <if test="updateTime != null">updateTime,</if>
+            <if test="isDelete != null">isDelete,</if>
+            <if test="requestParams != null">requestParams,</if>
+            <if test="methodName != null">methodName,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=BIGINT},</if>
+            <if test="name != null">#{name,jdbcType=VARCHAR},</if>
+            <if test="description != null">#{description,jdbcType=VARCHAR},</if>
+            <if test="url != null">#{url,jdbcType=VARCHAR},</if>
+            <if test="requestHeader != null">#{requestHeader,jdbcType=VARCHAR},</if>
+            <if test="responseHeader != null">#{responseHeader,jdbcType=VARCHAR},</if>
+            <if test="status != null">#{status,jdbcType=INTEGER},</if>
+            <if test="method != null">#{method,jdbcType=VARCHAR},</if>
+            <if test="userId != null">#{userId,jdbcType=BIGINT},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="isDelete != null">#{isDelete,jdbcType=TINYINT},</if>
+            <if test="requestParams != null">#{requestParams,jdbcType=VARCHAR},</if>
+            <if test="methodName != null">#{methodName,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.swx.apicommon.model.entity.InterfaceInfo">
+        update interface_info
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null">
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="requestHeader != null">
+                requestHeader = #{requestHeader,jdbcType=VARCHAR},
+            </if>
+            <if test="responseHeader != null">
+                responseHeader = #{responseHeader,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="method != null">
+                method = #{method,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                userId = #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                updateTime = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDelete != null">
+                isDelete = #{isDelete,jdbcType=TINYINT},
+            </if>
+            <if test="requestParams != null">
+                requestParams = #{requestParams,jdbcType=VARCHAR},
+            </if>
+            <if test="methodName != null">
+                methodName = #{methodName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where   id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.swx.apicommon.model.entity.InterfaceInfo">
+        update interface_info
+        set
+            name =  #{name,jdbcType=VARCHAR},
+            description =  #{description,jdbcType=VARCHAR},
+            url =  #{url,jdbcType=VARCHAR},
+            requestHeader =  #{requestHeader,jdbcType=VARCHAR},
+            responseHeader =  #{responseHeader,jdbcType=VARCHAR},
+            status =  #{status,jdbcType=INTEGER},
+            method =  #{method,jdbcType=VARCHAR},
+            userId =  #{userId,jdbcType=BIGINT},
+            createTime =  #{createTime,jdbcType=TIMESTAMP},
+            updateTime =  #{updateTime,jdbcType=TIMESTAMP},
+            isDelete =  #{isDelete,jdbcType=TINYINT},
+            requestParams =  #{requestParams,jdbcType=VARCHAR},
+            methodName =  #{methodName,jdbcType=VARCHAR}
+        where   id = #{id,jdbcType=BIGINT}
+    </update>
 </mapper>

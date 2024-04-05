@@ -17,10 +17,11 @@ spring:
       matching-strategy: ant_path_matcher
   # session 配置
   session:
-    # todo 取消注释开启分布式 session（须先配置 Redis）
-    # store-type: redis
-    # 30 天过期
+    store-type: redis
     timeout: 2592000
+    redis:
+      namespace: spring:session
+      flush-mode: on_save
   # 数据库配置
   # todo 需替换配置
   datasource:
@@ -29,13 +30,13 @@ spring:
     username: root
     password: 123456
   # Redis 配置
-  # todo 需替换配置，然后取消注释
-#  redis:
-#    database: 1
-#    host: localhost
-#    port: 6379
-#    timeout: 5000
-#    password: 123456
+
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    timeout: 5000
+    password: 123456789
   # Elasticsearch 配置
   # todo 需替换配置，然后取消注释
 #  elasticsearch:
@@ -100,10 +101,17 @@ api:
     secret-key: 123456789
 dubbo:
   application:
-    name: dubbo-springboot-demo-provider
+    name: Api-BackEnd
   protocol:
     name: dubbo
     port: -1
   registry:
     id: nacos-registry
     address: nacos://localhost:8848
+
+
+#rpc:
+#  server:
+#    port: 9991
+#    app-name: "provider1"
+

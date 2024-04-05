@@ -2,6 +2,7 @@ package com.swx.springbootinit.aop;
 
 import com.swx.apicommon.model.entity.User;
 import com.swx.springbootinit.annotation.AuthCheck;
+import com.swx.springbootinit.annotation.ShanLan;
 import com.swx.springbootinit.common.ErrorCode;
 import com.swx.springbootinit.exception.BusinessException;
 import com.swx.springbootinit.model.enums.UserRoleEnum;
@@ -37,6 +38,7 @@ public class AuthInterceptor {
      * @param authCheck
      * @return
      */
+
     @Around("@annotation(authCheck)")
     public Object doInterceptor(ProceedingJoinPoint joinPoint, AuthCheck authCheck) throws Throwable {
         String mustRole = authCheck.mustRole();
@@ -65,5 +67,8 @@ public class AuthInterceptor {
         // 通过权限校验，放行
         return joinPoint.proceed();
     }
+
+
+
 }
 
